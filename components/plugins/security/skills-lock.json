@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "skills": {
+    "accelint-security-best-practices": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accelint-security-best-practices/SKILL.md",
+      "computedHash": "6cf5acbc9595bf4e7e9b64108ee06730273d9f0fa439a84a7e032696febf0733"
+    },
+    "api-authentication": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "skillPath": "skills/api-authentication/SKILL.md",
+      "computedHash": "da093972b72908b941d2255e1b717292cb5220d850efbb38e80b0e38bd6072f9"
+    },
+    "csrf-protection": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "skillPath": "skills/csrf-protection/SKILL.md",
+      "computedHash": "c00837d39638a52363e2052981237bb33750c954d9ae41b370c366d4a909e9fb"
+    },
+    "jwt-security": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "jwt-security/SKILL.md",
+      "computedHash": "88b3f7d03223cf20e24598d231e667b13ba6bf9040fd490feafcd226356a9db1"
+    },
+    "openclaw-secure-linux-cloud": {
+      "source": "xixu-me/skills",
+      "sourceType": "github",
+      "skillPath": "skills/openclaw-secure-linux-cloud/SKILL.md",
+      "computedHash": "b7e81be8bff4108cae046df3d0ce8375ab1968373625fb019fbe260c08c1ab01"
+    },
+    "secure-linux-web-hosting": {
+      "source": "xixu-me/skills",
+      "sourceType": "github",
+      "skillPath": "skills/secure-linux-web-hosting/SKILL.md",
+      "computedHash": "6285f13dbc139e4067cea2adbbbecc85ba72f37c69c80300511af35b134a293a"
+    },
+    "security-testing": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "skillPath": "skills/security-testing/SKILL.md",
+      "computedHash": "8081982f6a5e3c908098a8ac8c0d4943c717aef2db8109cf50a8173bb4000eb6"
+    }
+  }
+}

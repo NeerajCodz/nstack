@@ -1,0 +1,13 @@
+{
+  "name": "security",
+  "displayName": "Security Plugin",
+  "description": "Security review, vulnerability scanning, dependency audit, and secret detection tools.",
+  "version": "1.0.0",
+  "author": {
+    "name": "nstack"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "hooks": "./hooks/hooks.json"
+}

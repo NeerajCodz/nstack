@@ -1,0 +1,13 @@
+{
+  "name": "mobile",
+  "displayName": "Mobile Plugin",
+  "description": "Mobile UI review, cross-platform audit, performance profiling, and responsive design tools.",
+  "version": "1.0.0",
+  "author": {
+    "name": "nstack"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "hooks": "./hooks/hooks.json"
+}

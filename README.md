@@ -95,3 +95,63 @@ Skills are a great way to teach Claude how to get better at using specific piece
 
 # CONTRIBUTORS
 [https://github.com/NeerajCodz](https://github.com/NeerajCodz)
+
+
+# nstack: unified AI coding stack
+
+The `nstack/` CLI manages the repository's portable agents, skills, plugins,
+commands, hooks, and MCP manifests across Claude Code, OpenAI Codex, OpenCode,
+Oh My Pi, Antigravity CLI, Gemini CLI, Cursor, and GitHub Copilot.
+
+## Quick start
+
+```bash
+node nstack/bin/nstack.mjs init --project-home codex
+node nstack/bin/nstack.mjs refresh
+node nstack/bin/nstack.mjs list available
+node nstack/bin/nstack.mjs install mcp/context7
+node nstack/bin/nstack.mjs generate codex
+```
+
+Use `nstack init --project-home <harness>` when project-local configuration is
+preferred. Without `--project-home`, configuration is written to the harness's
+normal user directory. Set `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `OPENCLAUDE_CONFIG_DIR`,
+`GEMINI_HOME`, `COPILOT_HOME`, `OPENCODE_CONFIG_DIR`, or `PI_CONFIG_DIR` to
+override defaults.
+
+## Curated sources
+
+`components/catalog/ai-stack.json` records reviewed entry points and install
+commands. It intentionally catalogs sources rather than downloading arbitrary
+code. The main sources are:
+
+- [Anthropic skills](https://github.com/anthropics/skills)
+- [OpenAI Codex skills](https://github.com/openai/skills)
+- [OpenAI plugins](https://github.com/openai/plugins)
+- [Vercel agent skills](https://github.com/vercel-labs/agent-skills)
+- [obra/superpowers](https://github.com/obra/superpowers)
+- [MCP official registry](https://registry.modelcontextprotocol.io)
+- [Model Context Protocol specification](https://modelcontextprotocol.io)
+
+## MCP policy
+
+MCP manifests are explicit and portable; adapters translate them into each
+harness's native format. Prefer official repositories, pin versions before
+production use, keep credentials in environment variables, and install only
+the servers required for the current project. `nstack` does not execute remote
+package installers as a side effect of listing or generating artifacts.
+
+Bundled manifests:
+
+- `context7` — versioned library documentation
+- `playwright` — browser automation and web app inspection
+- `chrome-devtools` — Chrome inspection and performance debugging
+- `github` — repositories, issues, pull requests, and Actions
+
+## Portability contract
+
+Keep behavioral instructions in `AGENTS.md`; harness-specific files
+(`CLAUDE.md`, `GEMINI.md`, and generated settings) should adapt that contract
+instead of defining conflicting rules. Install only the plugin and skill
+surfaces supported by the target harness; nstack's adapters omit unsupported
+surfaces rather than silently changing semantics.

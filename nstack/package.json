@@ -1,0 +1,30 @@
+{
+  "name": "nstack",
+  "version": "1.0.0",
+  "description": "Multi-harness agent/plugin/skill manager for Claude Code, OpenClaude, Codex, Gemini CLI",
+  "type": "module",
+  "bin": {
+    "nstack": "./bin/nstack.mjs"
+  },
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test lib/**/*.test.mjs"
+  },
+  "keywords": [
+    "claude-code",
+    "openclaude",
+    "codex",
+    "gemini",
+    "agents",
+    "plugins",
+    "skills",
+    "cli"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

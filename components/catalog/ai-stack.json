@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": "1.0.0",
+  "policy": {
+    "description": "Curated sources and portable defaults for a multi-harness AI coding setup.",
+    "rule": "Review every remote skill, plugin, and MCP server before enabling it; nstack never executes remote installers automatically.",
+    "lastReviewed": "2026-08-12"
+  },
+  "harnesses": [
+    {
+      "id": "codex",
+      "command": "codex",
+      "docs": "https://developers.openai.com/codex",
+      "config": "~/.codex/config.toml",
+      "context": "AGENTS.md",
+      "install": "npm install -g @openai/codex"
+    },
+    {
+      "id": "claude",
+      "command": "claude",
+      "docs": "https://code.claude.com/docs/en/overview",
+      "config": "~/.claude",
+      "context": "CLAUDE.md",
+      "install": "npm install -g @anthropic-ai/claude-code"
+    },
+    {
+      "id": "omp",
+      "command": "omp",
+      "docs": "https://omp.sh/docs",
+      "config": "~/.omp/agent",
+      "context": "AGENTS.md",
+      "install": "bun install -g @oh-my-pi/pi-coding-agent"
+    },
+    {
+      "id": "agy",
+      "command": "agy",
+      "docs": "https://antigravity.google",
+      "config": "~/.gemini/antigravity-cli",
+      "context": "AGENTS.md and GEMINI.md",
+      "install": "Use the official Antigravity installer for your platform"
+    },
+    {
+      "id": "opencode",
+      "command": "opencode",
+      "docs": "https://opencode.ai/docs",
+      "config": "~/.config/opencode/opencode.json",
+      "context": "AGENTS.md",
+      "install": "npm install -g opencode-ai@latest"
+    },
+    {
+      "id": "gemini",
+      "command": "gemini",
+      "docs": "https://github.com/google-gemini/gemini-cli",
+      "config": "~/.gemini",
+      "context": "GEMINI.md",
+      "install": "npm install -g @google/gemini-cli"
+    },
+    {
+      "id": "cursor",
+      "command": "cursor",
+      "docs": "https://docs.cursor.com",
+      "config": "~/.cursor",
+      "context": "AGENTS.md",
+      "install": "Install Cursor from https://cursor.com"
+    },
+    {
+      "id": "copilot",
+      "command": "copilot",
+      "docs": "https://docs.github.com/en/copilot",
+      "config": "~/.copilot",
+      "context": "AGENTS.md",
+      "install": "Install GitHub Copilot CLI from the official GitHub documentation"
+    }
+  ],
+  "skillSources": [
+    {
+      "id": "anthropic-official",
+      "repository": "https://github.com/anthropics/skills",
+      "directory": "components/skills",
+      "install": "npx skills add anthropics/skills -g -y",
+      "recommended": ["frontend-design", "webapp-testing", "skill-creator", "mcp-builder", "pdf", "docx", "xlsx"]
+    },
+    {
+      "id": "openai-plugins",
+      "repository": "https://github.com/openai/plugins",
+      "install": "$skill-installer <skill-name>",
+      "recommended": ["plugin-creator", "build-web-apps", "figma", "notion", "expo"]
+    },
+    {
+      "id": "vercel-agent-skills",
+      "repository": "https://github.com/vercel-labs/agent-skills",
+      "install": "npx skills add vercel-labs/agent-skills -g -y",
+      "recommended": ["vercel-react-best-practices", "web-design-guidelines", "agent-browser"]
+    },
+    {
+      "id": "matt-pocock",
+      "repository": "https://github.com/mattpocock/skills",
+      "install": "npx skills add mattpocock/skills -g -y",
+      "recommended": ["tdd", "improve-codebase-architecture", "code-review", "handoff", "triage"]
+    },
+    {
+      "id": "superpowers",
+      "repository": "https://github.com/obra/superpowers",
+      "install": "npx skills add obra/superpowers -g -y",
+      "recommended": ["systematic-debugging", "brainstorming"]
+    },
+    {
+      "id": "supabase",
+      "repository": "https://github.com/supabase/agent-skills",
+      "install": "npx skills add supabase/agent-skills -g -y",
+      "recommended": ["supabase-postgres-best-practices"]
+    }
+  ],
+  "pluginSources": [
+    {
+      "id": "claude-plugins-official",
+      "repository": "https://github.com/anthropics/claude-plugins-official",
+      "install": "/plugin marketplace add anthropics/claude-plugins-official",
+      "recommended": ["mcp-server-dev", "code-review", "security-guidance"]
+    },
+    {
+      "id": "openai-plugins",
+      "repository": "https://github.com/openai/plugins",
+      "install": "Use the Codex plugin marketplace or $skill-installer",
+      "recommended": ["build-web-apps", "figma", "notion", "github"]
+    },
+    {
+      "id": "nstack-bundled",
+      "repository": "./components/plugins",
+      "install": "nstack install plugin/<name>",
+      "recommended": ["frontend", "unit-testing", "security-scanning", "full-stack-orchestration", "comprehensive-review"]
+    }
+  ],
+  "mcpSources": [
+    {
+      "id": "official-registry",
+      "registry": "https://registry.modelcontextprotocol.io",
+      "docs": "https://modelcontextprotocol.io",
+      "selection": "Prefer official repositories, pinned package names, least privilege, and explicit user approval."
+    },
+    {
+      "id": "context7",
+      "repository": "https://github.com/upstash/context7",
+      "manifest": "components/mcps/context7.json"
+    },
+    {
+      "id": "playwright",
+      "repository": "https://github.com/microsoft/playwright-mcp",
+      "manifest": "components/mcps/playwright.json"
+    },
+    {
+      "id": "chrome-devtools",
+      "repository": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "manifest": "components/mcps/chrome-devtools.json"
+    },
+    {
+      "id": "github",
+      "repository": "https://github.com/github/github-mcp-server",
+      "manifest": "components/mcps/github.json"
+    }
+  ]
+}

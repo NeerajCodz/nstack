@@ -1,0 +1,18 @@
+{
+  "description": "Mobile plugin hooks",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/lint-check.mjs",
+            "args": [],
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

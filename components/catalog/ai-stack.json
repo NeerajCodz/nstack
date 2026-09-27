@@ -3,7 +3,7 @@
   "schemaVersion": "1.0.0",
   "policy": {
     "description": "Curated sources and portable defaults for a multi-harness AI coding setup.",
-    "rule": "Review every remote skill, plugin, and MCP server before enabling it; nstack never executes remote installers automatically.",
+    "rule": "Review every remote skill, plugin, and MCP server before enabling it. nstack never runs remote installers automatically; only the explicit `nstack tools ensure gh` command may provision the official GitHub CLI from the operating system's official package source.",
     "lastReviewed": "2026-08-12"
   },
   "harnesses": [
@@ -70,6 +70,22 @@
       "config": "~/.copilot",
       "context": "AGENTS.md",
       "install": "Install GitHub Copilot CLI from the official GitHub documentation"
+    }
+  ],
+  "tools": [
+    {
+      "id": "github-cli",
+      "command": "gh",
+      "docs": "https://cli.github.com/manual/",
+      "download": "https://github.com/cli/cli/releases",
+      "install": "Run nstack tools ensure gh on demand; official package sources only"
+    },
+    {
+      "id": "orca",
+      "command": "orca",
+      "docs": "https://github.com/stablyai/orca",
+      "optional": true,
+      "integration": "Use only when orca status --json confirms a reachable desktop runtime"
     }
   ],
   "skillSources": [

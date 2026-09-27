@@ -3,6 +3,7 @@ import { join } from "path";
 import { homedir } from "os";
 import { BaseAdapter } from "./base.mjs";
 import { readMcpManifest, toClaudeServer, mergeJsonFile } from "../mcp.mjs";
+import { ensureProjectAgents } from "../project-guidance.mjs";
 
 export class AgyAdapter extends BaseAdapter {
   constructor() {
@@ -18,12 +19,7 @@ export class AgyAdapter extends BaseAdapter {
     if (!existsSync(settingsPath)) {
       writeFileSync(settingsPath, JSON.stringify({ mcpServers: {} }, null, 2) + "\n");
     }
-    const agentsMd = join(cwd, "AGENTS.md");
-    if (!existsSync(agentsMd)) {
-      const geminiMd = join(cwd, "GEMINI.md");
-      if (existsSync(geminiMd)) cpSync(geminiMd, agentsMd);
-      else writeFileSync(agentsMd, "# Agents\n\nThis project uses nstack.\n");
-    }
+    ensureProjectAgents(cwd);
   }
 
   async installAgent(cwd, agentFile, agentName, projectHome) {

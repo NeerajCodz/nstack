@@ -3,6 +3,7 @@ import { join, basename } from "path";
 import { homedir } from "os";
 import { BaseAdapter } from "./base.mjs";
 import { readMcpManifest, toCodexToml, upsertTomlTable } from "../mcp.mjs";
+import { ensureProjectAgents } from "../project-guidance.mjs";
 
 export class CodexAdapter extends BaseAdapter {
   constructor() {
@@ -16,15 +17,7 @@ export class CodexAdapter extends BaseAdapter {
     for (const dir of dirs) {
       this.ensureDir(join(configDir, dir));
     }
-    const agentsMd = join(cwd, "AGENTS.md");
-    if (!existsSync(agentsMd)) {
-      const claudeMd = join(cwd, "CLAUDE.md");
-      if (existsSync(claudeMd)) {
-        cpSync(claudeMd, agentsMd);
-      } else {
-        writeFileSync(agentsMd, "# Agents\n\nThis project uses nstack.\n");
-      }
-    }
+    ensureProjectAgents(cwd);
   }
 
   async installAgent(cwd, agentFile, agentName, projectHome) {

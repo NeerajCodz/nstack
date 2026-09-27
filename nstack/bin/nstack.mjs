@@ -7,8 +7,8 @@ import { initGit } from "../lib/git.mjs";
 import { install, uninstall, listAvailable } from "../lib/installer.mjs";
 import { listInstalled } from "../lib/list.mjs";
 import { generateArtifacts } from "../lib/generate.mjs";
-import { showStatus } from "../lib/status.mjs";
-import { buildRegistry } from "../lib/registry.mjs";
+import { ensureGh } from "../lib/tools.mjs";
+import { linear as linearCommand, formatLinearResult, formatLinearError, formatLinearHumanError } from "../lib/linear.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const NSTACK_ROOT = resolve(__dirname, "../..");
@@ -21,9 +21,14 @@ nstack — Multi-harness agent/plugin/skill manager
   nstack init git [options]             Initialize Git and GitHub scaffolding
   nstack install <type>/<name>          Install agent, skill, plugin, command, or MCP
   nstack uninstall <type>/<name>        Uninstall an item
-  nstack list [installed|available]     List installed or available components
-  nstack refresh                        Rebuild component registry
-  nstack generate [harness]             Generate harness-specific artifacts
+  nstack tools ensure gh               Check GitHub CLI/auth; install only if absent
+  nstack linear <cmd>                  Work with Linear issues and teams
+  nstack linear --help             Show Linear commands and pagination rules
+  nstack linear auth login|status|logout
+  nstack linear issue|search|list|list-issues [options]
+  nstack linear team|project|create|save-issue|relation [options]
+  nstack linear status|assignee|priority|estimate|due-date|label [options]
+  nstack linear comment|attach [options]
   nstack status                         Show project status
 
 Options:
@@ -32,6 +37,12 @@ Options:
   --force           Overwrite existing generated files
 Tools: claude, codex, omp, agy, opencode, gemini, cursor, copilot, openclaude
 Types: agent, skill, plugin, command, mcp
+
+Linear configuration:
+  NSTACK_LINEAR_CONVEX_URL  Convex HTTP endpoint used for all Linear API requests
+  NSTACK_LINEAR_WEB_URL      nstack web application used for OAuth login
+  LINEAR_API_KEY             Optional explicit API-key override; otherwise use OAuth
+  Add --json to Linear commands for machine-readable output
 
 Default home directories:
   Claude Code    ~/.claude          (CLAUDE_CONFIG_DIR)
@@ -47,7 +58,7 @@ Examples:
   nstack init git
   nstack init git --branch main
   nstack init git --force
-  nstack init --project-home claude
+  nstack tools ensure gh
   nstack install agent/backend-developer
   nstack install plugin/backend-development
   nstack list available
@@ -161,11 +172,34 @@ async function main() {
       break;
     }
 
-    case "status": {
-      await showStatus(process.cwd());
+    case "tools": {
+      if (rest[0] !== "ensure" || rest[1] !== "gh") {
+        console.error("Usage: nstack tools ensure gh");
+        process.exit(1);
+      }
+      const result = await ensureGh();
+      if (!result.authenticated) process.exitCode = 1;
       break;
     }
 
+    case "linear": {
+      const linearArgs = args.slice(1);
+      const json = linearArgs.includes("--json");
+      const controller = new AbortController();
+      const onInterrupt = () => controller.abort();
+      const isLogin = linearArgs[0] === "auth" && linearArgs[1] === "login";
+      if (isLogin) process.once("SIGINT", onInterrupt);
+      try {
+        const result = await linearCommand(linearArgs, { signal: controller.signal });
+        console.log(result.json ? JSON.stringify(result.data) : formatLinearResult(result.data));
+      } catch (error) {
+        console.error(json ? JSON.stringify({ error: formatLinearError(error) }) : formatLinearHumanError(error));
+        process.exitCode = 1;
+      } finally {
+        if (isLogin) process.removeListener("SIGINT", onInterrupt);
+      }
+      break;
+    }
     default:
       console.error(`Unknown command: ${command}`);
       console.log(HELP);

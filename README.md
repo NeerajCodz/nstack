@@ -119,6 +119,39 @@ normal user directory. Set `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `OPENCLAUDE_CONFIG
 `GEMINI_HOME`, `COPILOT_HOME`, `OPENCODE_CONFIG_DIR`, or `PI_CONFIG_DIR` to
 override defaults.
 
+Bare `nstack init` creates the shared `AGENTS.md` project workflow template;
+it preserves an existing file unchanged. Codex and Antigravity initialization
+use the same default when needed. Harness-specific `CLAUDE.md` and `GEMINI.md`
+remain separate.
+
+## GitHub and Linear workflows
+
+`nstack tools ensure gh` checks GitHub CLI and authentication only when invoked.
+It may install `gh` when missing from an official platform package source, but
+does not replace an existing installation. Run it immediately before GitHub
+issue or pull-request work, then check `gh auth status`; it never automates
+login. `gh` uses the official GitHub CLI documentation and release sources.
+
+The first-party `nstack linear` commands use a standalone Convex-backed service
+and Next.js consent UI in `apps/web/`. Configure `NSTACK_LINEAR_CONVEX_URL` and
+`NSTACK_LINEAR_WEB_URL` for the CLI; configure `NEXT_PUBLIC_CONVEX_URL` and
+`NEXT_PUBLIC_SITE_URL` for the web app. Convex deployment secrets are
+`LINEAR_OAUTH_CLIENT_ID`, `LINEAR_OAUTH_CLIENT_SECRET`,
+`LINEAR_OAUTH_REDIRECT_URI`, and `LINEAR_TOKEN_ENCRYPTION_KEY`. See
+[`apps/web/README.md`](apps/web/README.md) for Linear OAuth registration,
+deployment setup, and local development. Do not commit `.env.local` or
+deployment secrets. `LINEAR_API_KEY` is an optional per-process developer
+override; it is not stored in nstack configuration.
+
+Run `nstack linear auth status`, `nstack linear auth login`, and
+`nstack linear auth logout` to manage the opaque user-level CLI session.
+`nstack linear issue <id> --full --json` reads issue context;
+`nstack linear team list --json` discovers teams. See
+[`docs/linear-workflow.md`](docs/linear-workflow.md) for safe ticket
+interpretation, lifecycle transitions, and uncertain-write handling. Orca is
+optional and is used only for Orca-specific operations when its desktop runtime
+is reachable.
+
 ## Git and GitHub setup
 
 Initialize a repository with the reference Git workflow in one command:

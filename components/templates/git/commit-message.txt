@@ -1,0 +1,12 @@
+# Commit message format: <type>(<scope>): <subject>
+#
+# Types: feat, fix, docs, refactor, test, build, ci, chore, perf, revert
+# Scope: optional area affected (cli, api, ui, docs, etc.)
+# Subject: imperative, lowercase, no trailing period, <= 72 characters
+#
+# Body: explain what changed and why. Wrap at 72 characters.
+#
+# Footer: reference issues or breaking changes, for example:
+# Closes #123
+# BREAKING CHANGE: describe the migration required by consumers
+

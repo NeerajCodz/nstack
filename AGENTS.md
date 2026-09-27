@@ -25,12 +25,15 @@ documentation and installation links.
 ## nstack commands
 
 ```bash
+node nstack/bin/nstack.mjs init git
 node nstack/bin/nstack.mjs init --project-home codex
 node nstack/bin/nstack.mjs refresh
 node nstack/bin/nstack.mjs list available
 node nstack/bin/nstack.mjs install mcp/context7
 node nstack/bin/nstack.mjs generate codex
 ```
+
+Portable authoring rules are maintained in [`docs/authoring.md`](docs/authoring.md).
 
 ## Portable component conventions
 

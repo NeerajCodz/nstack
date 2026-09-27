@@ -1,0 +1,39 @@
+# Normalize text files across platforms.
+* text=auto eol=lf
+
+# Keep common source and configuration files as UTF-8 text.
+*.c text
+*.cc text
+*.cpp text
+*.css text
+*.go text
+*.html text
+*.java text
+*.js text
+*.json text
+*.md text
+*.mjs text
+*.py text
+*.rs text
+*.toml text
+*.ts text
+*.tsx text
+*.yml text
+*.yaml text
+
+# Generated and binary assets.
+*.7z binary
+*.gif binary
+*.gz binary
+*.ico binary
+*.jpeg binary
+*.jpg binary
+*.pdf binary
+*.png binary
+*.tar binary
+*.tgz binary
+*.ttf binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.zip binary

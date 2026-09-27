@@ -4,6 +4,7 @@
 
 export { readConfig, writeConfig, ensureConfig, getConfigPath } from "./config.mjs";
 export { initProject, initHarness } from "./init.mjs";
+export { initGit } from "./git.mjs";
 export { install, uninstall } from "./installer.mjs";
 export { listInstalled } from "./list.mjs";
 export { generateArtifacts } from "./generate.mjs";

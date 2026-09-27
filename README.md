@@ -119,6 +119,35 @@ normal user directory. Set `CODEX_HOME`, `CLAUDE_CONFIG_DIR`, `OPENCLAUDE_CONFIG
 `GEMINI_HOME`, `COPILOT_HOME`, `OPENCODE_CONFIG_DIR`, or `PI_CONFIG_DIR` to
 override defaults.
 
+## Git and GitHub setup
+
+Initialize a repository with the reference Git workflow in one command:
+
+```bash
+nstack init git
+```
+
+This command:
+
+- runs `git init -b main` when the directory is not already a repository;
+- installs `.gitignore`, `.gitattributes`, and a Conventional Commits
+  `.gitmessage` template;
+- configures `git config commit.template .gitmessage`;
+- copies the complete `.github/` reference set, including issue forms,
+  pull-request template, workflows, Dependabot, funding, Code of Conduct,
+  contributing guidance, and `CODEOWNERS`;
+- adds `.github/BRANCHING.md` with feature, fix, docs, test, chore, and release
+  branch-name templates.
+
+Existing files are preserved by default, so the command is safe to rerun.
+Use `--force` to replace generated files and `--branch <name>` when creating a
+new repository with a different initial branch:
+
+```bash
+nstack init git --branch develop
+nstack init git --force
+```
+
 ## Curated sources
 
 `components/catalog/ai-stack.json` records reviewed entry points and install
@@ -133,6 +162,8 @@ code. The main sources are:
 - [MCP official registry](https://registry.modelcontextprotocol.io)
 - [Model Context Protocol specification](https://modelcontextprotocol.io)
 
+
+For portable plugin authoring conventions, see [`docs/authoring.md`](docs/authoring.md).
 ## MCP policy
 
 MCP manifests are explicit and portable; adapters translate them into each

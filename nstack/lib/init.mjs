@@ -1,7 +1,8 @@
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { createDefaultConfig, writeConfig, ensureConfig, setToolConfig, setProjectHome } from "./config.mjs";
 import { getAdapter } from "./adapters/index.mjs";
+import { ensureProjectAgents } from "./project-guidance.mjs";
 
 const TOOL_DESCRIPTIONS = {
   claude: "Claude Code (Anthropic official) — CLAUDE_CONFIG_DIR",
@@ -21,6 +22,7 @@ const NSTACK_DIRS = ["agents", "skills", "plugins", "hooks", "commands", "memory
 export async function initProject(cwd, componentsDir, projectHome) {
   const nstackDir = join(cwd, ".nstack");
   if (!existsSync(nstackDir)) mkdirSync(nstackDir, { recursive: true });
+  ensureProjectAgents(cwd);
 
   for (const dir of NSTACK_DIRS) {
     const dirPath = join(nstackDir, dir);

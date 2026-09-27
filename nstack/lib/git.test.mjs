@@ -23,7 +23,7 @@ test("initGit creates a complete GitHub workflow and initial branch", async () =
   assert.equal(git(cwd, ["symbolic-ref", "--short", "HEAD"]), "develop");
   assert.equal(git(cwd, ["config", "--local", "--get", "commit.template"]), ".gitmessage");
   assert.match(readFileSync(join(cwd, ".gitmessage"), "utf8"), /Commit message format/);
-  assert.match(readFileSync(join(cwd, ".github", "BRANCHING.md"), "utf8"), /feature\//);
+  assert.match(readFileSync(join(cwd, ".github", "BRANCHING.md"), "utf8"), /feat\//);
   assert.match(readFileSync(join(cwd, ".github", "ISSUE_TEMPLATE", "bug_report.yml"), "utf8"), /name:/);
   assert.match(readFileSync(join(cwd, ".github", "CODEOWNERS"), "utf8"), /@your-org/);
 });

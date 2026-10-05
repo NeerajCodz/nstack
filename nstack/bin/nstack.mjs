@@ -2,7 +2,7 @@
 import { saveRegistry } from "../lib/config.mjs";
 import { initProject, initHarness } from "../lib/init.mjs";
 import { initGit } from "../lib/git.mjs";
-import { install, installRemoteFolder, uninstall, listAvailable } from "../lib/installer.mjs";
+import { install, installRemoteFolder, uninstall, listAvailable, searchAvailable } from "../lib/installer.mjs";
 import { listInstalled } from "../lib/list.mjs";
 import { generateArtifacts } from "../lib/generate.mjs";
 import { ensureGh } from "../lib/tools.mjs";
@@ -16,7 +16,7 @@ nstack — Multi-harness agent/plugin/skill manager
 
   nstack init [--project-home] [tool]   Initialize nstack or a harness
   nstack init git [options]             Initialize Git and GitHub scaffolding
-  nstack install <type>/<name>          Install agent, skill, plugin, command, or MCP
+  nstack search <query>                  Search available components locally
   nstack plugins add <url>              Install plugin folder from GitHub
   nstack skills add <url>               Install skill folder from GitHub
   nstack agents add <url>               Install agent folder from GitHub
@@ -63,6 +63,7 @@ Examples:
   nstack tools ensure gh
   nstack install agent/backend-developer
   nstack install plugin/backend-development
+  nstack search web security
   nstack list available
   nstack plugins add https://github.com/NeerajCodz/nstack-directory/tree/main/plugins/web-scripting
   nstack skills add https://github.com/NeerajCodz/nstack-directory/tree/main/skills/security-review
@@ -175,6 +176,16 @@ async function main() {
       } else {
         await listInstalled(process.cwd(), target);
       }
+      break;
+    }
+
+    case "search": {
+      const query = rest.join(" ").trim();
+      if (!query) {
+        console.error("Usage: nstack search <query>");
+        process.exit(1);
+      }
+      await searchAvailable(process.cwd(), query, resolveDirectorySource());
       break;
     }
 

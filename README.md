@@ -106,12 +106,17 @@ Oh My Pi, Antigravity CLI, Gemini CLI, Cursor, and GitHub Copilot.
 ## Quick start
 
 ```bash
-node nstack/bin/nstack.mjs init --project-home codex
-node nstack/bin/nstack.mjs refresh
-node nstack/bin/nstack.mjs list available
-node nstack/bin/nstack.mjs install mcp/context7
-node nstack/bin/nstack.mjs generate codex
+bun install
+bun install --cwd nstack
+bun --bun nstack/bin/nstack.mjs init --project-home codex
+bun --bun nstack/bin/nstack.mjs refresh
+bun --bun nstack/bin/nstack.mjs list available
+bun --bun nstack/bin/nstack.mjs search web security
+bun --bun nstack/bin/nstack.mjs install mcp/context7
+bun --bun nstack/bin/nstack.mjs generate codex
 ```
+
+External users can continue invoking the published CLI with Node.
 
 Use `nstack init --project-home <harness>` when project-local configuration is
 preferred. Without `--project-home`, configuration is written to the harness's

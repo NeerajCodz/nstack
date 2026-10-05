@@ -124,6 +124,30 @@ it preserves an existing file unchanged. Codex and Antigravity initialization
 use the same default when needed. Harness-specific `CLAUDE.md` and `GEMINI.md`
 remain separate.
 
+## Component sources and remote folders
+
+The canonical component source is the public
+[nstack-directory repository](https://github.com/NeerajCodz/nstack-directory).
+The first `install`, `list available`, `init`, or `generate` operation that
+needs component files shallow-clones it to `~/.nstack/directory`. `nstack
+install type/name` resolves from that checkout; `nstack refresh` updates it
+before rebuilding the project registry.
+
+Install a GitHub folder directly with the plural `add` commands:
+
+```bash
+nstack plugins add https://github.com/NeerajCodz/nstack-directory/tree/main/plugins/web-scripting
+nstack skills add https://github.com/NeerajCodz/nstack-directory/tree/main/skills/security-review
+```
+
+Remote folder installation also supports `agents`, `commands`, and `mcps`.
+Directory categories include `plugins/`, `skills/`, `agents/`, `commands/`,
+`hooks/`, `mcps/`, `templates/`, `catalog/`, `docs/`, and `tools/`. Git must
+be installed for directory checkout and remote folder downloads. Review
+component instructions, manifests, hooks, and scripts before use; remote
+components are untrusted, and nstack does not execute downloaded scripts or
+package installers.
+
 ## GitHub and Linear workflows
 
 `nstack tools ensure gh` checks GitHub CLI and authentication only when invoked.
@@ -183,7 +207,7 @@ nstack init git --force
 
 ## Curated sources
 
-`components/catalog/ai-stack.json` records reviewed entry points and install
+[`catalog/ai-stack.json`](https://github.com/NeerajCodz/nstack-directory/blob/main/catalog/ai-stack.json) records reviewed entry points and install
 commands. It intentionally catalogs sources rather than downloading arbitrary
 code. The main sources are:
 
@@ -196,7 +220,7 @@ code. The main sources are:
 - [Model Context Protocol specification](https://modelcontextprotocol.io)
 
 
-For portable plugin authoring conventions, see [`docs/authoring.md`](docs/authoring.md).
+For portable plugin authoring conventions, see [the directory repository's authoring guide](https://github.com/NeerajCodz/nstack-directory/blob/main/docs/authoring.md).
 ## MCP policy
 
 MCP manifests are explicit and portable; adapters translate them into each

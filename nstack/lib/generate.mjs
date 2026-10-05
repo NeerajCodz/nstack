@@ -1,7 +1,7 @@
 import { readConfig } from "./config.mjs";
 import { getAdapter, listAdapters } from "./adapters/index.mjs";
 
-export async function generateArtifacts(cwd, harness, componentsDir) {
+export async function generateArtifacts(cwd, harness, directoryRoot) {
   const config = readConfig(cwd);
   if (!config) {
     console.log("No nstack config found. Run 'nstack init' first.");
@@ -21,7 +21,7 @@ export async function generateArtifacts(cwd, harness, componentsDir) {
       console.log(`Tool '${harness}' not initialized. Run 'nstack init ${harness}' first.`);
       return;
     }
-    await adapter.generate(cwd, componentsDir, projectHome);
+    await adapter.generate(cwd, directoryRoot, projectHome);
   } else {
     const tools = Object.keys(config.tools || {});
     if (tools.length === 0) {
@@ -32,7 +32,7 @@ export async function generateArtifacts(cwd, harness, componentsDir) {
       const adapter = getAdapter(tool);
       if (adapter) {
         console.log(`\n--- ${tool} ---`);
-        await adapter.generate(cwd, componentsDir, projectHome);
+        await adapter.generate(cwd, directoryRoot, projectHome);
       }
     }
   }

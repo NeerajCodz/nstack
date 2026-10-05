@@ -93,13 +93,13 @@ function configureCommitTemplate(cwd, force) {
  * Initialize Git itself and install the repository's complete GitHub workflow.
  * Existing files are preserved unless force is explicitly requested.
  */
-export async function initGit(cwd, componentsDir, options = {}) {
+export async function initGit(cwd, directoryRoot, options = {}) {
   const branch = options.branch || DEFAULT_BRANCH;
   const force = Boolean(options.force);
   assertBranchName(branch);
 
   const repository = initializeRepository(cwd, branch);
-  const templatesDir = join(componentsDir, "templates");
+  const templatesDir = join(directoryRoot, "templates");
   const summary = { created: [], overwritten: [], skipped: [] };
 
   installFile(

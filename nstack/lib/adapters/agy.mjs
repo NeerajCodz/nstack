@@ -10,7 +10,7 @@ export class AgyAdapter extends BaseAdapter {
     super("agy", join(homedir(), ".gemini"), "GEMINI_HOME", "agy");
   }
 
-  async init(cwd, projectHome) {
+  async init(cwd, projectHome, directoryRoot) {
     const configDir = this.getConfigDir(cwd, projectHome);
     for (const dir of ["agents", "skills", "commands", "antigravity-cli"]) {
       this.ensureDir(join(configDir, dir));
@@ -19,7 +19,7 @@ export class AgyAdapter extends BaseAdapter {
     if (!existsSync(settingsPath)) {
       writeFileSync(settingsPath, JSON.stringify({ mcpServers: {} }, null, 2) + "\n");
     }
-    ensureProjectAgents(cwd);
+    ensureProjectAgents(cwd, directoryRoot);
   }
 
   async installAgent(cwd, agentFile, agentName, projectHome) {

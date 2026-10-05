@@ -7,7 +7,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { initGit } from "./git.mjs";
 
-const componentsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "components");
+const directoryRoot = join(dirname(fileURLToPath(import.meta.url)), "fixtures", "directory");
 
 
 function git(cwd, args) {
@@ -16,7 +16,7 @@ function git(cwd, args) {
 
 test("initGit creates a complete GitHub workflow and initial branch", async () => {
   const cwd = mkdtempSync(join(tmpdir(), "nstack-git-"));
-  const result = await initGit(cwd, componentsDir, { branch: "develop" });
+  const result = await initGit(cwd, directoryRoot, { branch: "develop" });
 
   assert.equal(result.initialized, true);
   assert.equal(result.branch, "develop");
@@ -30,10 +30,10 @@ test("initGit creates a complete GitHub workflow and initial branch", async () =
 
 test("initGit preserves existing files on rerun", async () => {
   const cwd = mkdtempSync(join(tmpdir(), "nstack-git-"));
-  await initGit(cwd, componentsDir);
+  await initGit(cwd, directoryRoot);
   writeFileSync(join(cwd, ".gitmessage"), "custom template\n");
 
-  const result = await initGit(cwd, componentsDir, { branch: "release" });
+  const result = await initGit(cwd, directoryRoot, { branch: "release" });
 
   assert.equal(result.initialized, false);
   assert.equal(result.branch, "main");
@@ -43,7 +43,7 @@ test("initGit preserves existing files on rerun", async () => {
   assert.equal(readFileSync(join(cwd, ".gitmessage"), "utf8"), "custom template\n");
   assert.equal(git(cwd, ["config", "--local", "--get", "commit.template"]), ".gitmessage");
 
-  const forced = await initGit(cwd, componentsDir, { force: true });
+  const forced = await initGit(cwd, directoryRoot, { force: true });
   assert.equal(forced.summary.created.length, 0);
   assert.equal(forced.summary.overwritten.length, 20);
   assert.match(readFileSync(join(cwd, ".gitmessage"), "utf8"), /Commit message format/);

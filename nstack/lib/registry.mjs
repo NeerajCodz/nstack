@@ -10,7 +10,7 @@ const TYPE_ALIASES = {
   mcps: "mcp",
 };
 
-export function buildRegistry(nstackRoot) {
+export function buildRegistry(directoryRoot) {
   const registry = {
     agents: [],
     skills: [],
@@ -20,14 +20,13 @@ export function buildRegistry(nstackRoot) {
     mcps: [],
   };
 
-  const componentsDir = join(nstackRoot, "components");
-  if (!existsSync(componentsDir)) return registry;
+  if (!existsSync(directoryRoot)) return registry;
 
-  scanAgents(join(componentsDir, "agents"), registry.agents, nstackRoot);
-  scanSkills(join(componentsDir, "skills"), registry.skills, nstackRoot);
-  scanCommands(join(componentsDir, "commands"), registry.commands, nstackRoot);
-  scanMcps(join(componentsDir, "mcps"), registry.mcps, nstackRoot);
-  scanPlugins(join(componentsDir, "plugins"), registry.plugins, nstackRoot);
+  scanAgents(join(directoryRoot, "agents"), registry.agents, directoryRoot);
+  scanSkills(join(directoryRoot, "skills"), registry.skills, directoryRoot);
+  scanCommands(join(directoryRoot, "commands"), registry.commands, directoryRoot);
+  scanMcps(join(directoryRoot, "mcps"), registry.mcps, directoryRoot);
+  scanPlugins(join(directoryRoot, "plugins"), registry.plugins, directoryRoot);
 
   return registry;
 }

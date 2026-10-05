@@ -11,13 +11,13 @@ export class CodexAdapter extends BaseAdapter {
     super("codex", defaultHome, "CODEX_HOME", "codex");
   }
 
-  async init(cwd, projectHome) {
+  async init(cwd, projectHome, directoryRoot) {
     const configDir = this.getConfigDir(cwd, projectHome);
     const dirs = ["agents", "skills", "plugins"];
     for (const dir of dirs) {
       this.ensureDir(join(configDir, dir));
     }
-    ensureProjectAgents(cwd);
+    ensureProjectAgents(cwd, directoryRoot);
   }
 
   async installAgent(cwd, agentFile, agentName, projectHome) {

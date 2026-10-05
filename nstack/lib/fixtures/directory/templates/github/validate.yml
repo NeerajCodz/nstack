@@ -245,7 +245,7 @@ jobs:
       - name: Install Gemini CLI
         # Pinned to the released line we developed against; bump alongside any
         # gemini-extension.json schema changes.
-        run: bun install -g @google/gemini-cli@latest
+        run: npm install -g @google/gemini-cli@latest
 
       - name: Verify CLI versions
         run: |

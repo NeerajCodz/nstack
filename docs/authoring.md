@@ -47,7 +47,7 @@ the native tool from the action you describe. OpenCode is strict about lowercase
 | Don't write | Write instead |
 |---|---|
 | "Use the `Read` tool to open the file." | "Open the file." |
-| "Use the `Bash` tool to run `bun test`." | "Run `bun test`." |
+| "Use the `Bash` tool to run `npm test`." | "Run `npm test`." |
 | "Call the `Grep` tool with pattern X." | "Search for pattern X." |
 | "Use `TodoWrite` to track progress." | "Track progress as you go." (No equivalent in Codex/Cursor.) |
 | "Spawn a subagent via the `Task` tool." | "Delegate to a subagent." (Codex: name the agent in prose.) |

@@ -17,8 +17,11 @@ nstack — Multi-harness agent/plugin/skill manager
   nstack init [--project-home] [tool]   Initialize nstack or a harness
   nstack init git [options]             Initialize Git and GitHub scaffolding
   nstack install <type>/<name>          Install agent, skill, plugin, command, or MCP
-  nstack plugins add <url>            Install plugin folder from GitHub
-  nstack skills add <url>             Install skill folder from GitHub
+  nstack plugins add <url>              Install plugin folder from GitHub
+  nstack skills add <url>               Install skill folder from GitHub
+  nstack agents add <url>               Install agent folder from GitHub
+  nstack commands add <url>             Install command folder from GitHub
+  nstack mcps add <url>                 Install MCP manifests from GitHub
   nstack uninstall <type>/<name>        Uninstall an item
   nstack tools ensure gh               Check GitHub CLI/auth; install only if absent
   nstack linear <cmd>                  Work with Linear issues and teams

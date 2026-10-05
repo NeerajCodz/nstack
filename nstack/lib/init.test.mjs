@@ -8,8 +8,8 @@ import { initProject } from "./init.mjs";
 import { CodexAdapter } from "./adapters/codex.mjs";
 import { AgyAdapter } from "./adapters/agy.mjs";
 
-const componentsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "components");
-const template = readFileSync(join(componentsDir, "templates", "nstack", "AGENTS.md"), "utf8");
+const directoryRoot = join(dirname(fileURLToPath(import.meta.url)), "fixtures", "directory");
+const template = readFileSync(join(directoryRoot, "templates", "nstack", "AGENTS.md"), "utf8");
 
 function projectDir(root, name) {
   const cwd = join(root, name);
@@ -29,7 +29,7 @@ async function withTempDir(run) {
 test("bare project init installs the default AGENTS guidance", async () => {
   await withTempDir(async (root) => {
     const cwd = projectDir(root, "bare");
-    await initProject(cwd, componentsDir, false);
+    await initProject(cwd, directoryRoot, false);
     assert.equal(readFileSync(join(cwd, "AGENTS.md"), "utf8"), template);
   });
 });
@@ -39,7 +39,7 @@ test("bare project init preserves an existing AGENTS file byte-for-byte", async 
     const cwd = projectDir(root, "custom");
     const original = Buffer.from("# Custom rules\r\n\0\n", "utf8");
     writeFileSync(join(cwd, "AGENTS.md"), original);
-    await initProject(cwd, componentsDir, false);
+    await initProject(cwd, directoryRoot, false);
     assert.deepEqual(readFileSync(join(cwd, "AGENTS.md")), original);
   });
 });
@@ -49,13 +49,13 @@ for (const [name, Adapter] of [["Codex", CodexAdapter], ["Antigravity", AgyAdapt
     await withTempDir(async (root) => {
       const adapter = new Adapter();
       const created = projectDir(root, "created");
-      await adapter.init(created, true);
+      await adapter.init(created, true, directoryRoot);
       assert.equal(readFileSync(join(created, "AGENTS.md"), "utf8"), template);
 
       const existing = projectDir(root, "existing");
       const original = Buffer.from("user-owned rules\r\n", "utf8");
       writeFileSync(join(existing, "AGENTS.md"), original);
-      await adapter.init(existing, true);
+      await adapter.init(existing, true, directoryRoot);
       assert.deepEqual(readFileSync(join(existing, "AGENTS.md")), original);
     });
   });

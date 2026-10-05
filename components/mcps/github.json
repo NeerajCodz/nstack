@@ -1,9 +1,0 @@
-{
-  "name": "github",
-  "description": "GitHub repositories, issues, pull requests, Actions, and code intelligence.",
-  "repository": "https://github.com/github/github-mcp-server",
-  "transport": "http",
-  "url": "https://api.githubcopilot.com/mcp/",
-  "enabledByDefault": false,
-  "tags": ["github", "issues", "pull-requests", "ci"]
-}

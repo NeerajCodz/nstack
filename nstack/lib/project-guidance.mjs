@@ -1,13 +1,11 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { join } from "path";
 
-const DEFAULT_AGENTS = join(dirname(fileURLToPath(import.meta.url)), "../../components/templates/nstack/AGENTS.md");
-
-export function ensureProjectAgents(cwd) {
+export function ensureProjectAgents(cwd, directoryRoot) {
+  const source = join(directoryRoot, "templates", "nstack", "AGENTS.md");
   const destination = join(cwd, "AGENTS.md");
   if (!existsSync(destination)) {
-    writeFileSync(destination, readFileSync(DEFAULT_AGENTS));
+    writeFileSync(destination, readFileSync(source));
   }
   return destination;
 }

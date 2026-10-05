@@ -19,10 +19,10 @@ const TOOL_DESCRIPTIONS = {
 
 const NSTACK_DIRS = ["agents", "skills", "plugins", "hooks", "commands", "memory", "agent-memory", "scripts"];
 
-export async function initProject(cwd, componentsDir, projectHome) {
+export async function initProject(cwd, directoryRoot, projectHome) {
   const nstackDir = join(cwd, ".nstack");
   if (!existsSync(nstackDir)) mkdirSync(nstackDir, { recursive: true });
-  ensureProjectAgents(cwd);
+  ensureProjectAgents(cwd, directoryRoot);
 
   for (const dir of NSTACK_DIRS) {
     const dirPath = join(nstackDir, dir);
@@ -66,7 +66,7 @@ export async function initProject(cwd, componentsDir, projectHome) {
   console.log("  nstack install skill/review");
 }
 
-export async function initHarness(cwd, tool, componentsDir) {
+export async function initHarness(cwd, tool, directoryRoot) {
   const supportedTools = Object.keys(TOOL_DESCRIPTIONS);
   if (!supportedTools.includes(tool)) {
     console.error(`Unknown tool: ${tool}`);
@@ -83,7 +83,7 @@ export async function initHarness(cwd, tool, componentsDir) {
     process.exit(1);
   }
 
-  await adapter.init(cwd, projectHome);
+  await adapter.init(cwd, projectHome, directoryRoot);
 
   setToolConfig(cwd, tool, {
     name: tool,

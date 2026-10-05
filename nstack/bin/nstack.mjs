@@ -1,18 +1,15 @@
 #!/usr/bin/env node
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
-import { readConfig, ensureConfig, saveRegistry } from "../lib/config.mjs";
+import { saveRegistry } from "../lib/config.mjs";
 import { initProject, initHarness } from "../lib/init.mjs";
 import { initGit } from "../lib/git.mjs";
-import { install, uninstall, listAvailable } from "../lib/installer.mjs";
+import { install, installRemoteFolder, uninstall, listAvailable } from "../lib/installer.mjs";
 import { listInstalled } from "../lib/list.mjs";
 import { generateArtifacts } from "../lib/generate.mjs";
 import { ensureGh } from "../lib/tools.mjs";
 import { linear as linearCommand, formatLinearResult, formatLinearError, formatLinearHumanError } from "../lib/linear.mjs";
+import { resolveDirectorySource } from "../lib/directory-source.mjs";
+import { buildRegistry } from "../lib/registry.mjs";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const NSTACK_ROOT = resolve(__dirname, "../..");
-const COMPONENTS_DIR = resolve(NSTACK_ROOT, "components");
 
 const HELP = `
 nstack — Multi-harness agent/plugin/skill manager
@@ -20,6 +17,11 @@ nstack — Multi-harness agent/plugin/skill manager
   nstack init [--project-home] [tool]   Initialize nstack or a harness
   nstack init git [options]             Initialize Git and GitHub scaffolding
   nstack install <type>/<name>          Install agent, skill, plugin, command, or MCP
+  nstack plugins add <url>              Install plugin folder from GitHub
+  nstack skills add <url>               Install skill folder from GitHub
+  nstack agents add <url>               Install agent folder from GitHub
+  nstack commands add <url>             Install command folder from GitHub
+  nstack mcps add <url>                 Install MCP manifests from GitHub
   nstack uninstall <type>/<name>        Uninstall an item
   nstack tools ensure gh               Check GitHub CLI/auth; install only if absent
   nstack linear <cmd>                  Work with Linear issues and teams
@@ -36,7 +38,7 @@ Options:
   --branch <name>   Set the initial Git branch (default: main)
   --force           Overwrite existing generated files
 Tools: claude, codex, omp, agy, opencode, gemini, cursor, copilot, openclaude
-Types: agent, skill, plugin, command, mcp
+Directory categories: plugins, skills, agents, commands, hooks, mcps, templates, catalog, docs, tools
 
 Linear configuration:
   NSTACK_LINEAR_CONVEX_URL  Convex HTTP endpoint used for all Linear API requests
@@ -62,6 +64,12 @@ Examples:
   nstack install agent/backend-developer
   nstack install plugin/backend-development
   nstack list available
+  nstack plugins add https://github.com/NeerajCodz/nstack-directory/tree/main/plugins/web-scripting
+  nstack skills add https://github.com/NeerajCodz/nstack-directory/tree/main/skills/security-review
+
+Ordinary "nstack install type/name" resolves from the cached canonical nstack-directory checkout.
+"nstack refresh" updates that checkout. Git is required for remote folder downloads.
+Remote installs support plugins, skills, agents, commands, and MCP manifests; review downloaded content before use.
 `;
 
 function parseArgs(args) {
@@ -105,14 +113,16 @@ async function main() {
       const tool = rest[0];
       const projectHome = flags["project-home"] || false;
       if (tool === "git") {
-        await initGit(process.cwd(), COMPONENTS_DIR, {
+        const directoryRoot = resolveDirectorySource();
+        await initGit(process.cwd(), directoryRoot, {
           branch: typeof flags.branch === "string" ? flags.branch : undefined,
           force: flags.force,
         });
       } else if (tool) {
-        await initHarness(process.cwd(), tool, COMPONENTS_DIR);
+        await initHarness(process.cwd(), tool, resolveDirectorySource());
       } else {
-        await initProject(process.cwd(), COMPONENTS_DIR, projectHome);
+        const directoryRoot = resolveDirectorySource();
+        await initProject(process.cwd(), directoryRoot, projectHome);
       }
       break;
     }
@@ -127,7 +137,20 @@ async function main() {
         console.error("Error: use format type/name (e.g., agent/backend-developer)");
         process.exit(1);
       }
-      await install(process.cwd(), type, name, NSTACK_ROOT);
+      await install(process.cwd(), type, name, resolveDirectorySource());
+      break;
+    }
+
+    case "plugins":
+    case "skills":
+    case "agents":
+    case "commands":
+    case "mcps": {
+      if (rest[0] !== "add" || !rest[1]) {
+        console.error(`Usage: nstack ${command} add <https://github.com/<owner>/<repo>/tree/<ref>/<path>>`);
+        process.exit(1);
+      }
+      await installRemoteFolder(process.cwd(), command, rest[1]);
       break;
     }
 
@@ -148,7 +171,7 @@ async function main() {
     case "list": {
       const target = rest[0];
       if (target === "available" || target === "all") {
-        await listAvailable(process.cwd(), rest[1], NSTACK_ROOT);
+        await listAvailable(process.cwd(), rest[1], resolveDirectorySource());
       } else {
         await listInstalled(process.cwd(), target);
       }
@@ -157,7 +180,8 @@ async function main() {
 
     case "refresh": {
       console.log("Rebuilding component registry...");
-      const registry = buildRegistry(NSTACK_ROOT);
+      const directoryRoot = resolveDirectorySource({ refresh: true });
+      const registry = buildRegistry(directoryRoot);
       saveRegistry(process.cwd(), registry);
       console.log(
         `Found ${registry.agents.length} agents, ${registry.skills.length} skills, ` +
@@ -168,7 +192,7 @@ async function main() {
     }
 
     case "generate": {
-      await generateArtifacts(process.cwd(), rest[0], COMPONENTS_DIR);
+      await generateArtifacts(process.cwd(), rest[0], resolveDirectorySource());
       break;
     }
 

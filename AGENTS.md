@@ -24,13 +24,12 @@ Cursor, and GitHub Copilot. See the canonical [nstack-directory catalog](https:/
 ## nstack commands
 
 ```bash
-bun --bun nstack/bin/nstack.mjs init git
-bun --bun nstack/bin/nstack.mjs init --project-home codex
-bun --bun nstack/bin/nstack.mjs refresh
-bun --bun nstack/bin/nstack.mjs list available
-bun --bun nstack/bin/nstack.mjs search web security
-bun --bun nstack/bin/nstack.mjs install mcp/context7
-bun --bun nstack/bin/nstack.mjs generate codex
+node nstack/bin/nstack.mjs init git
+node nstack/bin/nstack.mjs init --project-home codex
+node nstack/bin/nstack.mjs refresh
+node nstack/bin/nstack.mjs list available
+node nstack/bin/nstack.mjs install mcp/context7
+node nstack/bin/nstack.mjs generate codex
 ```
 
 Portable authoring rules are maintained in the [nstack-directory authoring guide](https://github.com/NeerajCodz/nstack-directory/blob/main/docs/authoring.md).

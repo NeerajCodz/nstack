@@ -11,7 +11,7 @@
     ".": "./lib/index.mjs"
   },
   "scripts": {
-    "test": "bun test ./lib"
+    "test": "node --test lib/**/*.test.mjs"
   },
   "keywords": [
     "claude-code",
@@ -24,7 +24,6 @@
     "cli"
   ],
   "license": "MIT",
-  "packageManager": "bun@1.3.14",
   "engines": {
     "node": ">=18"
   }

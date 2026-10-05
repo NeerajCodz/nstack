@@ -303,56 +303,6 @@ export async function listAvailable(cwd, filterType, directoryRoot) {
   }
 }
 
-export async function searchAvailable(cwd, query, directoryRoot) {
-  const normalizedQuery = query.trim();
-  if (!normalizedQuery) throw new Error("Usage: nstack search <query>");
-
-  const registry = buildRegistry(directoryRoot);
-  saveRegistry(cwd, registry);
-  const tokens = normalizedQuery.toLowerCase().split(/\s+/);
-  const entries = [
-    ...registry.plugins.map((item) => ({ ...item, componentType: "plugin" })),
-    ...registry.agents.map((item) => ({ ...item, componentType: "agent" })),
-    ...registry.skills.map((item) => ({ ...item, componentType: "skill" })),
-    ...registry.commands.map((item) => ({ ...item, componentType: "command" })),
-    ...registry.mcps.map((item) => ({ ...item, componentType: "mcp" })),
-  ];
-  const matches = entries.filter((item) => {
-    const searchable = [
-      item.name,
-      item.description,
-      item.componentType,
-      item.source,
-      ...(item.agents || []),
-      ...(item.skills || []),
-      ...(item.commands || []),
-      ...(item.mcps || []),
-    ].join("\n").toLowerCase();
-    return tokens.every((token) => searchable.includes(token));
-  });
-  matches.sort((left, right) =>
-    compareSearchText(left.componentType, right.componentType) ||
-    compareSearchText(left.name, right.name)
-  );
-
-  if (matches.length === 0) {
-    console.log(`No components match "${normalizedQuery}".`);
-    return matches;
-  }
-
-  for (const item of matches) {
-    console.log(`${item.componentType}/${item.name}${item.description ? ` — ${item.description}` : ""}`);
-    console.log(`  nstack install ${item.componentType}/${item.name}`);
-  }
-  return matches;
-}
-
-function compareSearchText(left, right) {
-  const lowerLeft = left.toLowerCase();
-  const lowerRight = right.toLowerCase();
-  return lowerLeft < lowerRight ? -1 : lowerLeft > lowerRight ? 1 : left < right ? -1 : left > right ? 1 : 0;
-}
-
 function getUninstallPaths(configDir, type, name) {
   if (type === "agent") return [join(configDir, "agents", `${name}.md`), join(configDir, "agents", `${name}.toml`)];
   if (type === "skill") return [join(configDir, "skills", name)];

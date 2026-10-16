@@ -303,13 +303,14 @@ export async function listAvailable(cwd, filterType, directoryRoot) {
   }
 }
 
-export async function searchAvailable(cwd, query, directoryRoot) {
+export async function searchAvailable(cwd, query, directoryRoot, { json = false } = {}) {
   const normalizedQuery = query.trim();
   if (!normalizedQuery) throw new Error("Usage: nstack search <query>");
 
   const registry = buildRegistry(directoryRoot);
   saveRegistry(cwd, registry);
-  const tokens = normalizedQuery.toLowerCase().split(/\s+/);
+  const lowerQuery = normalizedQuery.toLowerCase();
+  const tokens = lowerQuery.split(/\s+/);
   const entries = [
     ...registry.plugins.map((item) => ({ ...item, componentType: "plugin" })),
     ...registry.agents.map((item) => ({ ...item, componentType: "agent" })),
@@ -330,14 +331,36 @@ export async function searchAvailable(cwd, query, directoryRoot) {
     ].join("\n").toLowerCase();
     return tokens.every((token) => searchable.includes(token));
   });
-  matches.sort((left, right) =>
-    compareSearchText(left.componentType, right.componentType) ||
-    compareSearchText(left.name, right.name)
-  );
+  matches.sort((left, right) => {
+    const leftTier = getRelevanceTier(left.name, lowerQuery, tokens);
+    const rightTier = getRelevanceTier(right.name, lowerQuery, tokens);
+    const tierDiff = leftTier - rightTier;
+    return (
+      tierDiff ||
+      compareSearchText(left.componentType, right.componentType) ||
+      compareSearchText(left.name, right.name)
+    );
+  });
 
   if (matches.length === 0) {
+    if (json) {
+      console.log("[]");
+      return [];
+    }
     console.log(`No components match "${normalizedQuery}".`);
-    return matches;
+    return [];
+  }
+
+  if (json) {
+    const formatted = matches.map((item) => ({
+      componentType: item.componentType,
+      name: item.name,
+      description: item.description || "",
+      source: item.source,
+      installCommand: `nstack install ${item.componentType}/${item.name}`,
+    }));
+    console.log(JSON.stringify(formatted, null, 2));
+    return formatted;
   }
 
   for (const item of matches) {
@@ -345,6 +368,14 @@ export async function searchAvailable(cwd, query, directoryRoot) {
     console.log(`  nstack install ${item.componentType}/${item.name}`);
   }
   return matches;
+}
+
+function getRelevanceTier(name, lowerQuery, tokens) {
+  const lowerName = name.toLowerCase();
+  if (lowerName === lowerQuery) return 1;
+  if (tokens.every((token) => lowerName.includes(token))) return 2;
+  if (tokens.some((token) => lowerName.includes(token))) return 3;
+  return 4;
 }
 
 function compareSearchText(left, right) {

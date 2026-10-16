@@ -66,7 +66,7 @@ export async function initProject(cwd, directoryRoot, projectHome) {
   console.log("  nstack install skill/review");
 }
 
-export async function initHarness(cwd, tool, directoryRoot) {
+export async function initHarness(cwd, tool, directoryRoot, projectHome) {
   const supportedTools = Object.keys(TOOL_DESCRIPTIONS);
   if (!supportedTools.includes(tool)) {
     console.error(`Unknown tool: ${tool}`);
@@ -74,8 +74,12 @@ export async function initHarness(cwd, tool, directoryRoot) {
     process.exit(1);
   }
 
+  if (projectHome) {
+    setProjectHome(cwd, true);
+  }
+
   const config = ensureConfig(cwd);
-  const projectHome = config.projectHome || false;
+  const effectiveProjectHome = config.projectHome || false;
   const adapter = getAdapter(tool);
 
   if (!adapter) {
@@ -83,20 +87,20 @@ export async function initHarness(cwd, tool, directoryRoot) {
     process.exit(1);
   }
 
-  await adapter.init(cwd, projectHome, directoryRoot);
+  await adapter.init(cwd, effectiveProjectHome, directoryRoot);
 
   setToolConfig(cwd, tool, {
     name: tool,
     description: TOOL_DESCRIPTIONS[tool],
-    configDir: adapter.getConfigDir(cwd, projectHome),
+    configDir: adapter.getConfigDir(cwd, effectiveProjectHome),
     envVar: adapter.envVar,
   });
 
-  const configDir = adapter.getConfigDir(cwd, projectHome);
+  const configDir = adapter.getConfigDir(cwd, effectiveProjectHome);
   console.log(`\nInitialized for ${TOOL_DESCRIPTIONS[tool]}`);
   console.log(`Config dir: ${configDir}`);
 
-  if (projectHome) {
+  if (effectiveProjectHome) {
     console.log(`Set env: ${adapter.envVar}=.nstack/${adapter.projectDir}`);
   }
 

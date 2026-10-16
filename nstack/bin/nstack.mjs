@@ -9,6 +9,7 @@ import { ensureGh } from "../lib/tools.mjs";
 import { linear as linearCommand, formatLinearResult, formatLinearError, formatLinearHumanError } from "../lib/linear.mjs";
 import { resolveDirectorySource } from "../lib/directory-source.mjs";
 import { buildRegistry } from "../lib/registry.mjs";
+import { showStatus } from "../lib/status.mjs";
 
 
 const HELP = `
@@ -16,7 +17,7 @@ nstack — Multi-harness agent/plugin/skill manager
 
   nstack init [--project-home] [tool]   Initialize nstack or a harness
   nstack init git [options]             Initialize Git and GitHub scaffolding
-  nstack search <query>                  Search available components locally
+  nstack search <query> [--json]        Search available components locally
   nstack plugins add <url>              Install plugin folder from GitHub
   nstack skills add <url>               Install skill folder from GitHub
   nstack agents add <url>               Install agent folder from GitHub
@@ -31,7 +32,7 @@ nstack — Multi-harness agent/plugin/skill manager
   nstack linear team|project|create|save-issue|relation [options]
   nstack linear status|assignee|priority|estimate|due-date|label [options]
   nstack linear comment|attach [options]
-  nstack status                         Show project status
+  nstack status [--json]                Show project status
 
 Options:
   --project-home    Keep all configs in .nstack/<tool>/ instead of ~/.<tool>/
@@ -120,7 +121,7 @@ async function main() {
           force: flags.force,
         });
       } else if (tool) {
-        await initHarness(process.cwd(), tool, resolveDirectorySource());
+        await initHarness(process.cwd(), tool, resolveDirectorySource(), projectHome);
       } else {
         const directoryRoot = resolveDirectorySource();
         await initProject(process.cwd(), directoryRoot, projectHome);
@@ -185,7 +186,7 @@ async function main() {
         console.error("Usage: nstack search <query>");
         process.exit(1);
       }
-      await searchAvailable(process.cwd(), query, resolveDirectorySource());
+      await searchAvailable(process.cwd(), query, resolveDirectorySource(), { json: Boolean(flags.json) });
       break;
     }
 
@@ -233,6 +234,10 @@ async function main() {
       } finally {
         if (isLogin) process.removeListener("SIGINT", onInterrupt);
       }
+      break;
+    }
+    case "status": {
+      await showStatus(process.cwd(), { json: Boolean(flags.json) });
       break;
     }
     default:
